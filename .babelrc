@@ -1,6 +1,26 @@
 {
   "presets": [
-    "es2015",
     "react"
-  ]
+  ],
+  "env": {
+    "production": {
+      "presets": [
+        [
+          {
+            "es2015": {
+              "modules": false
+            },
+            "targets": {
+              "ie": 9,
+              "uglify": true
+            }
+          }
+        ]
+      ],
+      "plugins": [
+        "transform-react-constant-elements",
+        "transform-react-remove-prop-types"
+      ]
+    }
+  }
 }

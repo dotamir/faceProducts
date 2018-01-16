@@ -1,3 +1,8 @@
 export default {
-  products: {}
+  products: {
+    list: []
+  },
+  app: {
+    isLoading: false,
+  }
 };
