@@ -38998,6 +38998,17 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   }
   componentWillMount() {
     this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["a" /* fetchProducts */])());
+    window.addEventListener('scroll', this.handleScroll);
+  }
+  handleScroll() {
+    let scrollTop = document.documentElement && document.documentElement.scrollTop || document.body.scrollTop;
+    let scrollHeight = document.documentElement && document.documentElement.scrollHeight || document.body.scrollHeight;
+    let clientHeight = document.documentElement.clientHeight || window.innerHeight;
+    let scrolledToBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+    if (scrolledToBottom) {
+      console.log('Now its time.');
+    }
   }
   render() {
     console.log(this.props.app);
@@ -39098,7 +39109,7 @@ const mapStateToProps = state => ({
 function fetchProducts() {
   return dispatch => {
     dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: true });
-    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/products?_page=0&_limit=30').then(products => {
+    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/products?_page=0&_limit=28').then(products => {
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* SET_PRODUCTS */], payload: products.data });
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
     }).catch(err => {
@@ -40017,14 +40028,37 @@ class Products extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   render() {
     console.log(this.props.items);
     const { list } = this.props.items;
+    let adsCounter = 0;
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
       { className: 'columns is-multiline' },
       Object.keys(list).map(key => {
+        adsCounter = adsCounter + 1;
         const item = list[key];
         const oneWeekAgo = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).add(7, 'days').isAfter(); // return true/false
         const relativeTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).fromNow();
         const fullTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date);
+        if (adsCounter == 20) {
+          adsCounter = 0;
+          const rndNum = Math.floor(Math.random() * 1000);
+          return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { key: item.id, className: 'column is-3' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'div',
+              { className: 'card' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'div',
+                { className: 'card-image' },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'figure',
+                  { className: 'image' },
+                  __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement('img', { src: `/ads/?r=${rndNum}`, alt: 'Sponsor' })
+                )
+              )
+            )
+          );
+        }
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'div',
           { key: item.id, className: 'column is-3' },

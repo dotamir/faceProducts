@@ -6,13 +6,30 @@ class Products extends React.Component {
   render() {
     console.log(this.props.items);
     const { list } = this.props.items;
+    let adsCounter = 0;
     return(
       <div className="columns is-multiline">
         {Object.keys(list).map(key => {
+          adsCounter = adsCounter+1;
           const item = list[key];
           const oneWeekAgo = moment(item.date).add(7, 'days').isAfter(); // return true/false
           const relativeTime = moment(item.date).fromNow();
           const fullTime = moment(item.date);
+          if(adsCounter == 20) {
+            adsCounter = 0;
+            const rndNum = Math.floor(Math.random()*1000);
+            return(
+              <div key={item.id} className="column is-3">
+                <div className="card">
+                  <div className="card-image">
+                    <figure className="image">
+                      <img src={`/ads/?r=${rndNum}`} alt="Sponsor" />
+                    </figure>
+                  </div>
+                </div>
+              </div>
+            )
+          }
           return(
             <div key={item.id} className="column is-3">
               <div className="card">

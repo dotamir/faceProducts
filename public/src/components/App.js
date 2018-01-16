@@ -12,6 +12,17 @@ class App extends React.Component {
   }
   componentWillMount() {
     this.props.dispatch(fetchProducts());
+    window.addEventListener('scroll', this.handleScroll);
+  }
+  handleScroll() {
+    let scrollTop = (document.documentElement && document.documentElement.scrollTop) || document.body.scrollTop;
+    let scrollHeight = (document.documentElement && document.documentElement.scrollHeight) || document.body.scrollHeight;
+    let clientHeight = document.documentElement.clientHeight || window.innerHeight;
+    let scrolledToBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
+
+    if (scrolledToBottom) {
+      console.log('Now its time.')
+    }
   }
   render() {
     console.log(this.props.app);
