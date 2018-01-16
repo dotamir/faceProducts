@@ -40022,7 +40022,7 @@ class Products extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       { className: 'columns is-multiline' },
       Object.keys(list).map(key => {
         const item = list[key];
-        const oneWeekAgo = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).add(7, 'days').isAfter();
+        const oneWeekAgo = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).add(7, 'days').isAfter(); // return true/false
         const relativeTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).fromNow();
         const fullTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date);
         return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -40031,6 +40031,15 @@ class Products extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
             'div',
             { className: 'card' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'div',
+              { className: 'card-header' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'span',
+                { className: 'card-header-title' },
+                oneWeekAgo ? relativeTime : fullTime.format('llll')
+              )
+            ),
             __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
               'div',
               { className: 'card-content' },
@@ -40046,7 +40055,14 @@ class Products extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
               __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
                 'span',
                 { className: 'card-footer-item' },
-                oneWeekAgo ? relativeTime : fullTime.format('llll')
+                'size: ',
+                item.size
+              ),
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'span',
+                { className: 'card-footer-item' },
+                '$',
+                parseInt(item.price, 10) / 100
               )
             )
           )
