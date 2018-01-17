@@ -5650,10 +5650,13 @@ const IS_LOADING = 'IS_LOADING';
 /* harmony export (immutable) */ __webpack_exports__["a"] = IS_LOADING;
 
 const SET_PRODUCTS = 'SET_PRODUCTS';
-/* harmony export (immutable) */ __webpack_exports__["b"] = SET_PRODUCTS;
+/* harmony export (immutable) */ __webpack_exports__["c"] = SET_PRODUCTS;
 
 const LOAD_MORE = 'LOAD_MORE';
-/* unused harmony export LOAD_MORE */
+/* harmony export (immutable) */ __webpack_exports__["b"] = LOAD_MORE;
+
+const SET_SORT = 'SET_SORT';
+/* harmony export (immutable) */ __webpack_exports__["d"] = SET_SORT;
 
 
 /***/ }),
@@ -6551,10 +6554,12 @@ module.exports = invariant;
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
   products: {
-    list: []
+    list: [],
+    sort: ''
   },
   app: {
-    isLoading: false
+    isLoading: false,
+    loadMore: false
   }
 });
 
@@ -37634,10 +37639,15 @@ function productReducer(state = __WEBPACK_IMPORTED_MODULE_0__initialState__["a" 
   let newState;
 
   switch (action.type) {
-    case __WEBPACK_IMPORTED_MODULE_1__actions_actionTypes__["b" /* SET_PRODUCTS */]:
+    case __WEBPACK_IMPORTED_MODULE_1__actions_actionTypes__["c" /* SET_PRODUCTS */]:
       return __WEBPACK_IMPORTED_MODULE_2_object_assign___default()({}, state, { list: action.payload });
+      break;
+    case __WEBPACK_IMPORTED_MODULE_1__actions_actionTypes__["d" /* SET_SORT */]:
+      return __WEBPACK_IMPORTED_MODULE_2_object_assign___default()({}, state, { sort: action.payload });
+      break;
     default:
       return state;
+      break;
   }
 }
 
@@ -37660,6 +37670,8 @@ function productReducer(state = __WEBPACK_IMPORTED_MODULE_0__initialState__["a" 
   switch (action.type) {
     case __WEBPACK_IMPORTED_MODULE_1__actions_actionTypes__["a" /* IS_LOADING */]:
       return __WEBPACK_IMPORTED_MODULE_2_object_assign___default()({}, state, { isLoading: action.payload });
+    case __WEBPACK_IMPORTED_MODULE_1__actions_actionTypes__["b" /* LOAD_MORE */]:
+      return __WEBPACK_IMPORTED_MODULE_2_object_assign___default()({}, state, { loadMore: action.payload });
     default:
       return state;
   }
@@ -38999,6 +39011,7 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
   componentWillMount() {
     this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["a" /* fetchProducts */])());
@@ -39011,12 +39024,12 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     let scrolledToBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
 
     if (scrolledToBottom) {
-      console.log('Now its time.');
+      this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["b" /* loadMore */])());
     }
   }
   handleSelect(e) {
     const value = e.target.value;
-    this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["b" /* sortBy */])(value));
+    this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["c" /* sortBy */])(value));
   }
   render() {
     const { products, app } = this.props;
@@ -39025,6 +39038,9 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
     });
     const loaderSection = __WEBPACK_IMPORTED_MODULE_6_classnames___default()('section', {
       'is-hidden': !app.isLoading
+    });
+    const loadMoreStyle = __WEBPACK_IMPORTED_MODULE_6_classnames___default()('field', {
+      'is-hidden': !app.loadMore
     });
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
       'div',
@@ -39110,7 +39126,12 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
               )
             )
           ),
-          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Products__["a" /* default */], { items: products })
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Products__["a" /* default */], { items: products }),
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: loadMoreStyle },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_5_react_spinkits___default.a, { type: 'bounce' })
+          )
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'section',
@@ -39139,7 +39160,8 @@ const mapStateToProps = state => ({
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = fetchProducts;
-/* harmony export (immutable) */ __webpack_exports__["b"] = sortBy;
+/* harmony export (immutable) */ __webpack_exports__["c"] = sortBy;
+/* harmony export (immutable) */ __webpack_exports__["b"] = loadMore;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(213);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actionTypes__ = __webpack_require__(14);
@@ -39149,8 +39171,9 @@ const mapStateToProps = state => ({
 function fetchProducts() {
   return dispatch => {
     dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: true });
-    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/products?_page=0&_limit=28').then(products => {
-      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* SET_PRODUCTS */], payload: products.data });
+
+    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/api/products?_page=0&_limit=24').then(products => {
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["c" /* SET_PRODUCTS */], payload: products.data });
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
     }).catch(err => {
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
@@ -39160,13 +39183,30 @@ function fetchProducts() {
 
 function sortBy(value) {
   return (dispatch, getState) => {
-    const prodLenght = getState().products.list.length;
+    const prodLength = getState().products.list.length;
     dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: true });
-    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(`/api/products?_page=0&_limit=${prodLenght}&_sort=${value}`).then(products => {
-      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* SET_PRODUCTS */], payload: products.data });
+
+    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(`/api/products?_page=0&_limit=24&_sort=${value}`).then(products => {
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["c" /* SET_PRODUCTS */], payload: products.data });
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["d" /* SET_SORT */], payload: value });
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
     }).catch(err => {
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
+    });
+  };
+}
+
+function loadMore() {
+  return (dispatch, getState) => {
+    const prodLength = getState().products.list.length * 1 + 20;
+    const sortBy = getState().products.sort;
+    dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* LOAD_MORE */], payload: true });
+
+    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(`/api/products?_page=0&_limit=${prodLength}&_sort=${sortBy}`).then(newProducts => {
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["c" /* SET_PRODUCTS */], payload: newProducts.data });
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* LOAD_MORE */], payload: false });
+    }).catch(err => {
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* LOAD_MORE */], payload: false });
     });
   };
 }

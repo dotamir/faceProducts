@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchProducts, sortBy } from '../actions/index';
+import { fetchProducts, sortBy, loadMore } from '../actions/index';
 import Products from './Products';
 import Loader from 'react-spinkits';
 import classnames from 'classnames';
@@ -10,6 +10,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.handleSelect = this.handleSelect.bind(this);
+    this.handleScroll = this.handleScroll.bind(this);
   }
   componentWillMount() {
     this.props.dispatch(fetchProducts());
@@ -22,7 +23,7 @@ class App extends React.Component {
     let scrolledToBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
 
     if (scrolledToBottom) {
-      console.log('Now its time.')
+      this.props.dispatch(loadMore());
     }
   }
   handleSelect(e) {
@@ -36,6 +37,9 @@ class App extends React.Component {
     });
     const loaderSection = classnames('section', {
       'is-hidden': !app.isLoading
+    });
+    const loadMoreStyle = classnames('field', {
+      'is-hidden': !app.loadMore
     });
     return (
       <div>
@@ -71,6 +75,9 @@ class App extends React.Component {
               </div>
             </div>
             <Products items={products} />
+            <div className={loadMoreStyle}>
+              <Loader type="bounce" />
+            </div>
           </section>
           <section className={loaderSection}>
             <Loader />

@@ -1,8 +1,10 @@
 export default {
   products: {
-    list: []
+    list: [],
+    sort: '',
   },
   app: {
     isLoading: false,
+    loadMore: false
   }
 };
