@@ -23,7 +23,9 @@ class App extends React.Component {
     let scrolledToBottom = Math.ceil(scrollTop + clientHeight) >= scrollHeight;
 
     if (scrolledToBottom) {
-      this.props.dispatch(loadMore());
+      if(this.props.products.hasMore) {
+        this.props.dispatch(loadMore());
+      }
     }
   }
   handleSelect(e) {
@@ -40,6 +42,9 @@ class App extends React.Component {
     });
     const loadMoreStyle = classnames('field', {
       'is-hidden': !app.loadMore
+    });
+    const endOfStyle = classnames('field has-text-centered', {
+      'is-hidden': products.hasMore,
     });
     return (
       <div>
@@ -77,6 +82,9 @@ class App extends React.Component {
             <Products items={products} />
             <div className={loadMoreStyle}>
               <Loader type="bounce" />
+            </div>
+            <div style={{fontSize: '1.618rem'}} className={endOfStyle}>
+            ~ end of catalogue ~
             </div>
           </section>
           <section className={loaderSection}>

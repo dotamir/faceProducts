@@ -19,7 +19,7 @@ export function sortBy(value) {
   return (dispatch, getState) => {
     const prodLength = getState().products.list.length;
     dispatch({ type: types.IS_LOADING, payload: true });
-    
+
     axios.get(`/api/products?_page=0&_limit=24&_sort=${value}`).then(products => {
       dispatch({ type: types.SET_PRODUCTS, payload: products.data });
       dispatch({ type: types.SET_SORT, payload: value});
@@ -39,6 +39,9 @@ export function loadMore() {
     axios.get(`/api/products?_page=0&_limit=${prodLength}&_sort=${sortBy}`).then(newProducts => {
       dispatch({ type: types.SET_PRODUCTS, payload: newProducts.data });
       dispatch({ type: types.LOAD_MORE, payload: false });
+      if(newProducts.data.length < 1) {
+        dispatch({ type: types.SET_END, payload: false });
+      }
     }).catch(err =>{
       dispatch({ type: types.LOAD_MORE, payload: false });
     });

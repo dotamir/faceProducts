@@ -11,6 +11,7 @@ class Products extends React.Component {
         {Object.keys(list).map(key => {
           adsCounter = adsCounter+1;
           const item = list[key];
+          const itemStyles = {fontSize: item.size};
           const ISODate = new Date(item.date).toISOString(); // http://momentjs.com/guides/#/warnings/js-date/
           const oneWeekAgo = moment(ISODate).add(7, 'days').isAfter(); // return true || false
           const relativeTime = moment(ISODate).fromNow();
@@ -23,7 +24,7 @@ class Products extends React.Component {
                 <div className="card">
                   <div className="card-image">
                     <figure className="image">
-                      <img src={`/ads/?r=${rndNum}`} alt="Sponsor" />
+                      <img style={{height: '200px'}} src={`/ads/?r=${rndNum}`} alt="Sponsor" />
                     </figure>
                   </div>
                 </div>
@@ -36,8 +37,8 @@ class Products extends React.Component {
                 <div className="card-header">
                   <span className="card-header-title">{oneWeekAgo ? relativeTime : fullTime.format('llll')}</span>
                 </div>
-                <div className="card-content">
-                  <div className="content has-text-centered">
+                <div className="card-content" style={{height: '105px', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                  <div className="content has-text-centered" style={itemStyles}>
                     {item.face}
                   </div>
                 </div>
