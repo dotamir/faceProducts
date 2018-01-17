@@ -5652,6 +5652,9 @@ const IS_LOADING = 'IS_LOADING';
 const SET_PRODUCTS = 'SET_PRODUCTS';
 /* harmony export (immutable) */ __webpack_exports__["b"] = SET_PRODUCTS;
 
+const LOAD_MORE = 'LOAD_MORE';
+/* unused harmony export LOAD_MORE */
+
 
 /***/ }),
 /* 15 */
@@ -38995,6 +38998,7 @@ function verifySubselectors(mapStateToProps, mapDispatchToProps, mergeProps, dis
 class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   constructor(props) {
     super(props);
+    this.handleSelect = this.handleSelect.bind(this);
   }
   componentWillMount() {
     this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["a" /* fetchProducts */])());
@@ -39010,8 +39014,11 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       console.log('Now its time.');
     }
   }
+  handleSelect(e) {
+    const value = e.target.value;
+    this.props.dispatch(Object(__WEBPACK_IMPORTED_MODULE_3__actions_index__["b" /* sortBy */])(value));
+  }
   render() {
-    console.log(this.props.app);
     const { products, app } = this.props;
     const prodSection = __WEBPACK_IMPORTED_MODULE_6_classnames___default()('section', {
       'is-hidden': app.isLoading
@@ -39070,7 +39077,39 @@ class App extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
           'section',
-          { className: prodSection },
+          { style: { padding: '0 1.5rem' }, className: prodSection },
+          __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+            'div',
+            { className: 'field' },
+            __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+              'div',
+              { className: 'select' },
+              __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                'select',
+                { onChange: this.handleSelect },
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'option',
+                  null,
+                  'Sort by'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'option',
+                  { value: 'id' },
+                  'ID'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'option',
+                  { value: 'size' },
+                  'Size'
+                ),
+                __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
+                  'option',
+                  { value: 'price' },
+                  'Price'
+                )
+              )
+            )
+          ),
           __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(__WEBPACK_IMPORTED_MODULE_4__Products__["a" /* default */], { items: products })
         ),
         __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -39100,6 +39139,7 @@ const mapStateToProps = state => ({
 
 "use strict";
 /* harmony export (immutable) */ __webpack_exports__["a"] = fetchProducts;
+/* harmony export (immutable) */ __webpack_exports__["b"] = sortBy;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(213);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__actionTypes__ = __webpack_require__(14);
@@ -39113,7 +39153,19 @@ function fetchProducts() {
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* SET_PRODUCTS */], payload: products.data });
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
     }).catch(err => {
-      console.log(err);
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
+    });
+  };
+}
+
+function sortBy(value) {
+  return (dispatch, getState) => {
+    const prodLenght = getState().products.list.length;
+    dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: true });
+    __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get(`/api/products?_page=0&_limit=${prodLenght}&_sort=${value}`).then(products => {
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["b" /* SET_PRODUCTS */], payload: products.data });
+      dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
+    }).catch(err => {
       dispatch({ type: __WEBPACK_IMPORTED_MODULE_1__actionTypes__["a" /* IS_LOADING */], payload: false });
     });
   };
@@ -40026,7 +40078,6 @@ module.exports = function spread(callback) {
 
 class Products extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
   render() {
-    console.log(this.props.items);
     const { list } = this.props.items;
     let adsCounter = 0;
     return __WEBPACK_IMPORTED_MODULE_0_react___default.a.createElement(
@@ -40035,9 +40086,10 @@ class Products extends __WEBPACK_IMPORTED_MODULE_0_react___default.a.Component {
       Object.keys(list).map(key => {
         adsCounter = adsCounter + 1;
         const item = list[key];
-        const oneWeekAgo = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).add(7, 'days').isAfter(); // return true/false
-        const relativeTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date).fromNow();
-        const fullTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(item.date);
+        const ISODate = new Date(item.date).toISOString(); // http://momentjs.com/guides/#/warnings/js-date/
+        const oneWeekAgo = __WEBPACK_IMPORTED_MODULE_2_moment___default()(ISODate).add(7, 'days').isAfter(); // return true || false
+        const relativeTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(ISODate).fromNow();
+        const fullTime = __WEBPACK_IMPORTED_MODULE_2_moment___default()(ISODate);
         if (adsCounter == 20) {
           adsCounter = 0;
           const rndNum = Math.floor(Math.random() * 1000);

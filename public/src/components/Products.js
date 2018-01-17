@@ -4,7 +4,6 @@ import moment from 'moment';
 
 class Products extends React.Component {
   render() {
-    console.log(this.props.items);
     const { list } = this.props.items;
     let adsCounter = 0;
     return(
@@ -12,9 +11,10 @@ class Products extends React.Component {
         {Object.keys(list).map(key => {
           adsCounter = adsCounter+1;
           const item = list[key];
-          const oneWeekAgo = moment(item.date).add(7, 'days').isAfter(); // return true/false
-          const relativeTime = moment(item.date).fromNow();
-          const fullTime = moment(item.date);
+          const ISODate = new Date(item.date).toISOString(); // http://momentjs.com/guides/#/warnings/js-date/
+          const oneWeekAgo = moment(ISODate).add(7, 'days').isAfter(); // return true || false
+          const relativeTime = moment(ISODate).fromNow();
+          const fullTime = moment(ISODate);
           if(adsCounter == 20) {
             adsCounter = 0;
             const rndNum = Math.floor(Math.random()*1000);

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { fetchProducts } from '../actions/index';
+import { fetchProducts, sortBy } from '../actions/index';
 import Products from './Products';
 import Loader from 'react-spinkits';
 import classnames from 'classnames';
@@ -9,6 +9,7 @@ import classnames from 'classnames';
 class App extends React.Component {
   constructor(props) {
     super(props);
+    this.handleSelect = this.handleSelect.bind(this);
   }
   componentWillMount() {
     this.props.dispatch(fetchProducts());
@@ -24,8 +25,11 @@ class App extends React.Component {
       console.log('Now its time.')
     }
   }
+  handleSelect(e) {
+    const value = e.target.value;
+    this.props.dispatch(sortBy(value));
+  }
   render() {
-    console.log(this.props.app);
     const { products, app } = this.props;
     const prodSection = classnames('section', {
       'is-hidden': app.isLoading
@@ -55,7 +59,17 @@ class App extends React.Component {
               <li className="is-active"><a>Products</a></li>
             </ul>
           </nav>
-          <section className={prodSection}>
+          <section style={{padding: '0 1.5rem'}} className={prodSection}>
+            <div className="field">
+              <div className="select">
+                <select onChange={this.handleSelect}>
+                  <option>Sort by</option>
+                  <option value="id">ID</option>
+                  <option value="size">Size</option>
+                  <option value="price">Price</option>
+                </select>
+              </div>
+            </div>
             <Products items={products} />
           </section>
           <section className={loaderSection}>
